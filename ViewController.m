@@ -19,6 +19,10 @@
 - (IBAction)button2:(id)sender;
 - (IBAction)button3:(id)sender;
 - (IBAction)button4:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *button1Text;
+@property (weak, nonatomic) IBOutlet UIButton *button2Text;
+@property (weak, nonatomic) IBOutlet UIButton *button3Text;
+@property (weak, nonatomic) IBOutlet UIButton *button4Text;
 
 
 
@@ -57,11 +61,16 @@
     _card = [[questionCard alloc]init];
     [_deck initializeDeck];
     _card = [_deck drawRandomCard];
-    _labelText.text = [NSString stringWithFormat:@"Answer: %@", _card.picture];
+    
+    _labelText.text = [NSString stringWithFormat:@"%@"@" =", _card.picture];
    
     _startGameButton.enabled = NO;
+    [_button1Text setTitle:_card.answers[0] forState:UIControlStateNormal];
     
+    [_button2Text setTitle:_card.answers[1] forState:UIControlStateNormal];
     
+    [_button3Text setTitle:_card.answers[2] forState:UIControlStateNormal];
+    [_button4Text setTitle:_card.answers[3] forState:UIControlStateNormal];
     
 }
 
@@ -95,7 +104,23 @@
 }
 -(void) upDateUI
 {
-     _labelText.text = [NSString stringWithFormat:@"Answer: %@", _card.picture];
+    
+    if(_card.picture)
+    {
+    _labelText.text = [NSString stringWithFormat:@"%@"@" =", _card.picture];
+    }
+    else
+        _labelText.text = @"";
+    
+    [_button1Text setTitle:_card.answers[0] forState:UIControlStateNormal];
+    
+    [_button2Text setTitle:_card.answers[1] forState:UIControlStateNormal];
+    
+    [_button3Text setTitle:_card.answers[2] forState:UIControlStateNormal];
+    [_button4Text setTitle:_card.answers[3] forState:UIControlStateNormal];
+    
+    
+
 }
 
 - (IBAction)button2:(id)sender {
