@@ -13,6 +13,11 @@
 @property(strong, nonatomic) questionDeck* deck;
 @property (strong, nonatomic) questionCard* card;
 @property (weak, nonatomic) IBOutlet UILabel *labelText;
+@property (nonatomic) int addition;
+@property (nonatomic) int subtraction;
+@property (nonatomic) int additionMax;
+@property (nonatomic) int subtractionMax;
+@property (nonatomic) BOOL firstTime;
 - (IBAction)beginButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *startGameButton;
 - (IBAction)button1:(id)sender;
@@ -25,18 +30,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *button4Text;
 
 
-
 @end
 
 @implementation ViewController
 
-/*
--(questionCard*) testQCard
-{
-    if(!_testQCard) _testQCard = [self createCard];
-    return _testQCard;
-}
- */
+
 -(questionCard*) createCard
 {
     return [[questionCard alloc] init];
@@ -53,8 +51,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-
 - (IBAction)beginButton:(id)sender {
+    
+    
     
     [sender setTitle:@" " forState:UIControlStateNormal];
     _deck = [[questionDeck alloc]init];
@@ -65,18 +64,44 @@
     _labelText.text = [NSString stringWithFormat:@"%@"@" =", _card.picture];
    
     _startGameButton.enabled = NO;
-    [_button1Text setTitle:_card.answers[0] forState:UIControlStateNormal];
     
-    [_button2Text setTitle:_card.answers[1] forState:UIControlStateNormal];
+    _addition = 0;
+    _additionMax = 0;
+    _subtraction = 0;
+    _subtractionMax = 0;
+    _firstTime = YES;
+    [self upDateUI];
+}
+
+-(void) upDateUI
+{
     
-    [_button3Text setTitle:_card.answers[2] forState:UIControlStateNormal];
-    [_button4Text setTitle:_card.answers[3] forState:UIControlStateNormal];
+    if(_card.picture)
+    {
+    _labelText.text = [NSString stringWithFormat:@"%@"@" =", _card.picture];
+    
+    [_button1Text setTitle:[NSString stringWithFormat:@"%@"@" ", _card.answers[0]] forState:UIControlStateNormal];
+    
+    [_button2Text setTitle:[NSString stringWithFormat:@"%@"@" ", _card.answers[1]] forState:UIControlStateNormal];
+    [_button3Text setTitle:[NSString stringWithFormat:@"%@"@" ", _card.answers[2]] forState:UIControlStateNormal];
+    [_button4Text setTitle:[NSString stringWithFormat:@"%@"@" ", _card.answers[3]] forState:UIControlStateNormal];
+    }
+    
+        else
+        {
+            _labelText.text = @"";
+            [_button1Text setTitle:@" "forState:UIControlStateNormal];
+            [_button2Text setTitle:@" "forState:UIControlStateNormal];
+            [_button3Text setTitle:@" "forState:UIControlStateNormal];
+            [_button4Text setTitle:@" "forState:UIControlStateNormal];
+            _labelText.text = [NSString stringWithFormat:@"Addition: " @"%d" @"/" @"%d" @" Subtraction " @"%d" @"/" @"%d", _addition, _additionMax, _subtraction, _subtractionMax ];
+            
+            
+        }
     
 }
 
-
 - (IBAction)button1:(id)sender {
-    //NSLog()
     if(_card.answer == 1)
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
@@ -86,9 +111,36 @@
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
         [alertView show];
+        
+        if([_card.category isEqualToString :@"subtraction"])
+        {
+            
+
+            if(_firstTime == YES)
+            {
+                _subtraction++;
+                
+            }
+                        _subtractionMax++;
+        }
+        if([_card.category isEqualToString :@"addition"])
+        {
+            
+
+            if(_firstTime == YES)
+            {
+                _addition++;
+                
+            }
+           
+            _additionMax++;
+        }
+        _firstTime = YES;
+        
+        
         _card = [_deck drawRandomCard];
         [self upDateUI];
-
+        
     }
     else
     {
@@ -99,31 +151,22 @@
                                   cancelButtonTitle:@"Try Again"
                                   otherButtonTitles:nil];
         [alertView show];
-
+        _firstTime = NO;
+        
+        
+        
+        
     }
-}
--(void) upDateUI
-{
     
-    if(_card.picture)
-    {
-    _labelText.text = [NSString stringWithFormat:@"%@"@" =", _card.picture];
-    }
-    else
-        _labelText.text = @"";
-    
-    [_button1Text setTitle:_card.answers[0] forState:UIControlStateNormal];
-    
-    [_button2Text setTitle:_card.answers[1] forState:UIControlStateNormal];
-    
-    [_button3Text setTitle:_card.answers[2] forState:UIControlStateNormal];
-    [_button4Text setTitle:_card.answers[3] forState:UIControlStateNormal];
     
     
 
+    
 }
 
 - (IBAction)button2:(id)sender {
+   
+    
     if(_card.answer == 2)
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
@@ -133,8 +176,36 @@
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
         [alertView show];
+        if([_card.category isEqualToString :@"subtraction"])
+        {
+            
+            
+            if(_firstTime == YES)
+            {
+                _subtraction++;
+                
+            }
+                        _subtractionMax++;
+        }
+        if([_card.category isEqualToString :@"addition"])
+        {
+            if(_firstTime == YES)
+            {
+                _addition++;
+                
+            }
+                        _additionMax++;
+        }
+        _firstTime = YES;
+        
+
+        
+        
         _card = [_deck drawRandomCard];
         [self upDateUI];
+        
+        
+       
         
     }
     else
@@ -146,8 +217,12 @@
                                   cancelButtonTitle:@"Try Again"
                                   otherButtonTitles:nil];
         [alertView show];
+        _firstTime = NO;
+
         
     }
+
+    
 
 }
 
@@ -161,10 +236,37 @@
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
         [alertView show];
+        
+        
+        if([_card.category isEqualToString :@"subtraction"])
+        {
+            
+            
+            if(_firstTime == YES)
+            {
+                _subtraction++;
+                
+            }
+                       _subtractionMax++;
+        }
+        if([_card.category isEqualToString :@"addition"])
+        {
+            
+            if(_firstTime == YES)
+            {
+                _addition++;
+                
+            }
+                      _additionMax++;
+        }
+        _firstTime = YES;
+        
+
         _card = [_deck drawRandomCard];
         [self upDateUI];
         
-    }
+        
+           }
     else
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
@@ -175,7 +277,12 @@
                                   otherButtonTitles:nil];
         [alertView show];
         
+        _firstTime = NO;
+
+        
     }
+    
+
 
 }
 
@@ -189,8 +296,37 @@
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
         [alertView show];
+        
+        
+        if([_card.category isEqualToString :@"subtraction"])
+        {
+            
+            if(_firstTime == YES)
+            {
+                _subtraction++;
+                
+            }
+           
+            _subtractionMax++;
+        }
+        if([_card.category isEqualToString :@"addition"])
+        {
+           
+            
+            if(_firstTime == YES)
+            {
+                _addition++;
+                
+            }
+            
+            _additionMax++;
+        }
+        _firstTime = YES;
+        
+
         _card = [_deck drawRandomCard];
         [self upDateUI];
+        
         
     }
     else
@@ -202,8 +338,10 @@
                                   cancelButtonTitle:@"Try Again"
                                   otherButtonTitles:nil];
         [alertView show];
+        _firstTime = NO;
         
     }
+    
 
 }
 @end
