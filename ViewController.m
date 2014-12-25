@@ -96,6 +96,9 @@
             [_button4Text setTitle:@" "forState:UIControlStateNormal];
             _labelText.text = [NSString stringWithFormat:@"Addition: " @"%d" @"/" @"%d" @" Subtraction " @"%d" @"/" @"%d", _addition, _additionMax, _subtraction, _subtractionMax ];
             
+            _startGameButton.enabled = YES;
+            [_startGameButton setTitle:@"New Round?" forState:UIControlStateNormal];
+           
             
         }
     
@@ -106,7 +109,7 @@
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
                                   initWithTitle:@"Correct!"
-                                  message:@"Good Job!"
+                                  message:[NSString stringWithFormat:@"%@",_card.message]
                                   delegate:nil
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
@@ -171,8 +174,7 @@
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
                                   initWithTitle:@"Correct!"
-                                  message:@"Good Job!"
-                                  delegate:nil
+                                  message:[NSString stringWithFormat:@"%@",_card.message]                                  delegate:nil
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
         [alertView show];
@@ -231,7 +233,7 @@
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
                                   initWithTitle:@"Correct!"
-                                  message:@"Good Job!"
+                                  message:[NSString stringWithFormat:@"%@",_card.message]
                                   delegate:nil
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
@@ -291,7 +293,7 @@
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
                                   initWithTitle:@"Correct!"
-                                  message:@"Good Job!"
+                                  message:[NSString stringWithFormat:@"%@",_card.message]
                                   delegate:nil
                                   cancelButtonTitle:@"Next Question"
                                   otherButtonTitles:nil];
@@ -333,7 +335,7 @@
     {
         UIAlertView *alertView = [[[UIAlertView alloc] init]
                                   initWithTitle:@"Incorrect"
-                                  message:@"Sorry.  Try Again?"
+                                  message:[NSString stringWithFormat:@"%@",_card.message]
                                   delegate:nil
                                   cancelButtonTitle:@"Try Again"
                                   otherButtonTitles:nil];
