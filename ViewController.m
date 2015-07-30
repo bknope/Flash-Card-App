@@ -42,8 +42,51 @@
 
 
 
-- (void)viewDidLoad {
+- (void)viewDidLoad {/****I am putting the Core Data creation here, this is not actually how it would work
+but it is just to test out making the database.  I would NOT normally put this here but, in the state that
+app is in right now it makes the most sense******/
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+    
+    NSString *documentName = @"myDocument";
+    NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
+    UIManagedDocument *document = [[UIManagedDocument alloc]initWithFileURL:url];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path] ];
+    if(fileExists)
+    {
+        [document openWithCompletionHandler:^(BOOL success){
+            if(!success) NSLog(@"Error (this isn't printed)");
+        }];
+    }
+    else{
+        [document saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+            if(!success) NSLog(@"Error (this isn't printed)");
+    }];
+    NSManagedObjectContext *context = document.managedObjectContext;
+    QuestionAnswer *question1 = [NSEntityDescription insertNewObjectForEntityForName:
+        @"QuestionAnswer" inManagedObjectContext: context];//questionAnswer is a class I created
+    if (![question1.managedObjectContext save:&error])
+            NSLog(@"oops");
+    NSError* error2 = nil;
+    question1.question = @"insert question here";//question is a property of question answer
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity =
+        [NSEntityDescription entityForName:@"QuestionAnswer"
+                    inManagedObjectContext:context];
+    [request setEntity:entity];
+    NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"question contains %@", @"food"];
+    [request setPredicate:predicate];
+    QuestionAnswer *select = [context executeFetchRequest:request error:&error];
+    NSArray* results = [context executeFetchRequest:request error:&error];
+    if(!results || results.count == 0)
+    {
+        NSLog(@"nothing in the array");//this is what is printed
+    }
+
+        
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 - (void)didReceiveMemoryWarning {
